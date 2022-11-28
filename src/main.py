@@ -39,15 +39,24 @@ class AudioFile:
   def print_buf(self):
     print(f'len: {len(self.buf)}')
 
+  def print_path(self):
+    print(f'path: {self.path}')
+
+  def print_max(self):
+    print(f'max: {np.argmax(self.buf)}')
+
   def print_info(self):
+    self.print_path()
     self.print_fs()
     self.print_buf()
+    self.print_max()
 
   def normalize(self):
-    self.max = np.argmax(self.buf)
+    self.max = self.buf[np.argmax(self.buf)]
     self.buf = self.buf / self.max
 
   def save_plot_buf(self, path):
+    plt.clf()
     plt.plot(self.buf)
     plt.show()
     plt.savefig(path)
@@ -91,8 +100,6 @@ def get_files():
 if __name__ == '__main__':
 
   files = get_files()
-  print(f'signal: {files.signal}')
-  print(f'response: {files.response}')
 
   s1 = AudioFile(files.signal)
   s2 = AudioFile(files.response)
