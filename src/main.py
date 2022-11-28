@@ -20,8 +20,13 @@ class AudioFile:
     samplerate, data = wavfile.read(self.path)
     self.fs = samplerate
     raw_stereo_buf = data.astype(float)
-    # get only left channel
-    self.buf = raw_stereo_buf[:, 0]
+    # get only left channel if stereo
+    if(raw_stereo_buf.ndim == 2):
+      self.buf = raw_stereo_buf[:, 0]
+    else:
+      self.buf = raw_stereo_buf
+
+
 
   def print_fs(self):
     print(f'fs: {self.fs}')
