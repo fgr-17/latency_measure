@@ -1,8 +1,14 @@
 #!/opt/venv/bin/python
 
+import matplotlib.pyplot as plt
+
 from scipy.io import wavfile
+from scipy import signal
+
 import sys
 import getopt
+import numpy as np
+
 
 class AudioFiles:
   def __init__(self, signal, response):
@@ -15,6 +21,7 @@ class AudioFile:
     self.path = path
     self.read_wav()
     self.print_info()
+    self.normalize()
 
   def read_wav(self):
     samplerate, data = wavfile.read(self.path)
@@ -26,8 +33,6 @@ class AudioFile:
     else:
       self.buf = raw_stereo_buf
 
-
-
   def print_fs(self):
     print(f'fs: {self.fs}')
 
@@ -38,10 +43,32 @@ class AudioFile:
     self.print_fs()
     self.print_buf()
 
+  def normalize(self):
+    self.max = np.argmax(self.buf)
+    self.buf = self.buf / self.max
+
+class LatencyMeasurement:
+
+  def __init__(self, sgn, res, fs):
+    self.sgn = sgn
+    self.res = res
+    self.fs = fs
+
+    if len(self.sgn) < len(self.res):
+      self.res = self.res[:len(self.sgn)]
+    elif len(self.sgn) > len(self.res):
+      self.sgn = self.sgn[:len(self.res)]
+
+  def get_latency(self):
+    c = signal.correlate(self.sgn, self.res, mode='valid', method='fft')
+    peak = np.argmax(c)
+    print(f'sgn len: {len(self.sgn)} - res len : {len(self.res)}')
+    print(f'peak {peak}')
+    plt.plot(c)
+
 
 def get_files():
 
-  print("Hola")
   argv = sys.argv[1:] 
   
   try:
@@ -58,12 +85,15 @@ def get_files():
 
   return AudioFiles(signal, response)
 
-
 if __name__ == '__main__':
+
   files = get_files()
   print(f'signal: {files.signal}')
   print(f'response: {files.response}')
 
   s1 = AudioFile(files.signal)
   s2 = AudioFile(files.response)
+
+  msr = LatencyMeasurement(s1.buf, s2.buf, s1.fs)
+  msr.get_latency()
 
