@@ -47,6 +47,11 @@ class AudioFile:
     self.max = np.argmax(self.buf)
     self.buf = self.buf / self.max
 
+  def save_plot_buf(self, path):
+    plt.plot(self.buf)
+    plt.show()
+    plt.savefig(path)
+
 class LatencyMeasurement:
 
   def __init__(self, sgn, res, fs):
@@ -64,8 +69,6 @@ class LatencyMeasurement:
     peak = np.argmax(c)
     print(f'sgn len: {len(self.sgn)} - res len : {len(self.res)}')
     print(f'peak {peak}')
-    plt.plot(c)
-
 
 def get_files():
 
@@ -93,6 +96,9 @@ if __name__ == '__main__':
 
   s1 = AudioFile(files.signal)
   s2 = AudioFile(files.response)
+
+  s1.save_plot_buf('./s1.png')
+  s2.save_plot_buf('./s2.png')
 
   msr = LatencyMeasurement(s1.buf, s2.buf, s1.fs)
   msr.get_latency()
