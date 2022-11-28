@@ -1,22 +1,27 @@
 #!/opt/venv/bin/python
 
-"""Main routine"""
+from scipy.io import wavfile
 import sys
-import logging
-from datetime import datetime
+import getopt
 
-import package as pkg
+def full_name():
 
+  print("Hola")
+  argv = sys.argv[1:] 
+  
+  try:
+    opts, args = getopt.getopt(argv, "f:l:")
+    
+  except:
+    print("Error")
+
+  for opt, arg in opts:
+    if opt in ['-f']:
+      first_name = arg
+    elif opt in ['-l']:
+      last_name = arg
+    
+  print( first_name +" " + last_name)
 
 if __name__ == '__main__':
-
-    logfile = f'../log{datetime.now().strftime("%d%m%Y")}'
-    logging.basicConfig(filename=logfile, level=logging.DEBUG, format="%(asctime)s %(message)s")
-
-    logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
-
-    logging.info('==============================================')
-    logging.info('Template Repo: Program started at %s', datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
-
-    p = pkg.Package()
-    p.say_hi()
+  full_name()
