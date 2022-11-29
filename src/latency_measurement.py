@@ -12,8 +12,8 @@ class LatencyMeasurement:
     self.sgn = sgn
     self.res = res
     self.fs = fs
-    print(f'sgn shape {np.shape(sgn)}')
-    print(f'res shape {np.shape(res)}')
+    # print(f'sgn shape {np.shape(sgn)}')
+    # print(f'res shape {np.shape(res)}')
 
     if len(self.sgn) < len(self.res):
       self.res = self.res[:len(self.sgn)]
@@ -25,10 +25,12 @@ class LatencyMeasurement:
     save_plot_buf(self.sgn, 'sgn.png')
     save_plot_buf(self.res, 'res.png')
     c = signal.correlate(self.sgn, self.res, mode='full', method='fft')
-    # c = np.correlate(a=self.sgn, v=self.res)
     save_plot_buf(c, 'corr.png')
-    print(f'corr: {c}')
+    # print(f'corr: {c}')
+
     # search for the max and correct the zero padding
     peak = len(self.res) - np.argmax(c)
-    print(f'sgn len: {len(self.sgn)} - res len : {len(self.res)}')
-    print(f'peak {peak}')
+    # print(f'sgn len: {len(self.sgn)} - res len : {len(self.res)}')
+    print(f'fs[Hz]:  {self.fs}')
+    print(f'samples: {peak}')
+    print(f't[ms]:   {peak*1000/self.fs:.3f}')
