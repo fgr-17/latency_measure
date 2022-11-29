@@ -1,7 +1,9 @@
 wheel
 build
-pyhomebroker
 pycodestyle
 pylint
 pytest
 mock
+scipy
+pandas
+numpy
