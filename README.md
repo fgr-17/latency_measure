@@ -1,6 +1,6 @@
-# Python Template
+# Latency Measurement
 
-This is a python template, docker based repository to initialise and create a basic package-app-test module with some scripts to automate some stuff
+This python repository contains the basic code to read audio from 2 wav files and calculate the latency between them using a full cross correlation (zero padding)
 
 ## Author: Federico G. Roux (rouxfederico@gmail.com)
 
@@ -12,12 +12,16 @@ Build and get inside the container executing:
 
 ```bash
 docker-compose up -d
-docker exec -it python-template bash
+docker exec -it  latency bash
 ```
 
 ## Usage
 
+```bash
 
+./main.py -s <path to signal file> -r <path to response file>
+
+```
 
 
 ## Contributing
