@@ -74,10 +74,12 @@ class LatencyMeasurement:
     print('Calculating the latency...')
     save_plot_buf(self.sgn, 'sgn.png')
     save_plot_buf(self.res, 'res.png')
-    c = signal.correlate(self.sgn, self.res, mode='valid', method='fft')
+    c = signal.correlate(self.sgn, self.res, mode='full', method='fft')
+    # c = np.correlate(a=self.sgn, v=self.res)
     save_plot_buf(c, 'corr.png')
     print(f'corr: {c}')
-    peak = np.argmax(c)
+    # search for the max and correct the zero padding
+    peak = len(self.res) - np.argmax(c)
     print(f'sgn len: {len(self.sgn)} - res len : {len(self.res)}')
     print(f'peak {peak}')
 
