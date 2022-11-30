@@ -1,5 +1,3 @@
-
-
 ''' Measure latency from 2 signals'''
 
 from scipy import signal
@@ -35,9 +33,9 @@ class LatencyMeasurement:
     peak = len(self.res) - np.argmax(c)
     # print(f'sgn len: {len(self.sgn)} - res len : {len(self.res)}')
     latency_ms = peak*1000/self.fs
-    if self.silent:
-        print(f'{latency_ms:.3f}')
-    else:
+    if not self.silent:
         print(f'fs[Hz]:  {self.fs}')
         print(f'samples: {peak}')
         print(f't[ms]:   {latency_ms:.3f}')
+
+    return latency_ms

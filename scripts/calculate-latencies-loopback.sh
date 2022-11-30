@@ -19,14 +19,18 @@ analize_audio_list() {
     shift
     responses_list=("$@")
     
+    latency_sum=0
     echo "signal file: ${signal_file}"
 
     for file in "${responses_list[@]}"
     do
-        echo "response file ${file}"
-        options=(-s "${signal_file}" -r "${file}")
-        echo "${options[@]}"
-        ${APP_PATH} "${options[@]}"
+        # echo "response file ${file}"
+        # echo "${options[@]}"
+        options=(-s "${signal_file}" -r "${file}" -S)
+        latency=$(${APP_PATH} "${options[@]}" 2>/dev/null)
+        latency_sum=`expr $latency_sum + $latency`
+        echo "latency: $latency"
+        echo "acc: $latency_sum"
 
     done
 }
