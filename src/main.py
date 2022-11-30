@@ -15,17 +15,22 @@ loopback_responses=(
     f'{audiofiles_path}/loopback/loopback-r5.wav'
 )
 
-latencies = np.zeros(len(loopback_responses))
+def latency_stats(signal_path, responses_path_list):
 
-print('Calculating latencies of loopbacks')
-for i, response_file in enumerate(loopback_responses):
-    latencies[i] = calculate_latency_from_files(loopback_signal, response_file, True)
-    # print(f'latency[{i}] [ms] = {latencies[i]}')
+    latencies = np.zeros(len(responses_path_list))
 
-latency_avg = np.average(latencies)
-latency_std = np.std(latencies)
+    print('Calculating latencies of loopbacks')
+    for i, response_file in enumerate(responses_path_list):
+        latencies[i] = calculate_latency_from_files(signal_path, response_file, True)
+        # print(f'latency[{i}] [ms] = {latencies[i]}')
 
-print(f'Average latency : {latency_avg:.2f} +/- {latency_std:.2}')
+    latency_avg = np.average(latencies)
+    latency_std = np.std(latencies)
+
+    return latency_avg, latency_std
+
+loopback_avg, loopback_std = latency_stats(loopback_signal, loopback_responses)
+print(f'Average latency : {loopback_avg:.2f} +/- {loopback_std:.2}')
 
 
 
