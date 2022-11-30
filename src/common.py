@@ -9,9 +9,10 @@ from audiofiles import AudioFiles
 def get_files():
   ''' read file path from cli '''
   argv = sys.argv[1:] 
+  silent = False
   
   try:
-    opts, args = getopt.getopt(argv, "s:r:")
+    opts, args = getopt.getopt(argv, "s:r:S")
     
   except:
     print("Error")
@@ -21,8 +22,10 @@ def get_files():
       signal = arg
     elif opt in ['-r']:
       response = arg
+    elif opt in ['-S']:
+      silent = True
 
-  return AudioFiles(signal, response)
+  return AudioFiles(signal, response), silent
 
 def save_plot_buf(buf, path):
     ''' plot to file '''

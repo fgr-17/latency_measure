@@ -7,7 +7,7 @@ from latency_measurement import LatencyMeasurement
 
 if __name__ == '__main__':
 
-  files = get_files()
+  files, silent = get_files()
 
   s1 = AudioFile(files.signal)
   s2 = AudioFile(files.response)
@@ -15,6 +15,6 @@ if __name__ == '__main__':
   save_plot_buf(s1.buf, './s1.png')
   save_plot_buf(s2.buf, './s2.png')
 
-  msr = LatencyMeasurement(s1.buf, s2.buf, s1.fs)
+  msr = LatencyMeasurement(s1.buf, s2.buf, s1.fs, silent)
   msr.get_latency()
 

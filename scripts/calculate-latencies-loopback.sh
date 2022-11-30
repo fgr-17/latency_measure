@@ -15,7 +15,7 @@ loopback_responses=(
 
 analize_audio_list() {
 
-    signal_file=$1
+    signal_file="$1"
     shift
     responses_list=("$@")
     
@@ -24,7 +24,8 @@ analize_audio_list() {
     for file in "${responses_list[@]}"
     do
         echo "response file ${file}"
-        options=(-s "${signal}" -r "${file}")
+        options=(-s "${signal_file}" -r "${file}")
+        echo "${options[@]}"
         ${APP_PATH} "${options[@]}"
 
     done
