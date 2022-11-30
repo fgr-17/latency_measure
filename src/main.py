@@ -1,20 +1,36 @@
 #!/opt/venv/bin/python
+import numpy as np
+from calc_latency_signal_response import calculate_latency_from_files
 
-from common import get_files, save_plot_buf
-from audiofile import AudioFile
-from latency_measurement import LatencyMeasurement
+base_dir = '/workspace'
+app_path = f'{base_dir}/src/main.py'
+audiofiles_path = f'{base_dir}/audiofiles'
+
+loopback_signal = f'{audiofiles_path}/loopback/loopback-s.wav'
+loopback_responses=(
+    f'{audiofiles_path}/loopback/loopback-r1.wav',
+    f'{audiofiles_path}/loopback/loopback-r2.wav',
+    f'{audiofiles_path}/loopback/loopback-r3.wav',
+    f'{audiofiles_path}/loopback/loopback-r4.wav',
+    f'{audiofiles_path}/loopback/loopback-r5.wav'
+)
+
+def latency_stats(signal_path, responses_path_list):
+
+    latencies = np.zeros(len(responses_path_list))
+
+    print('Calculating latencies of loopbacks')
+    for i, response_file in enumerate(responses_path_list):
+        latencies[i] = calculate_latency_from_files(signal_path, response_file, True)
+        # print(f'latency[{i}] [ms] = {latencies[i]}')
+
+    latency_avg = np.average(latencies)
+    latency_std = np.std(latencies)
+
+    return latency_avg, latency_std
+
+loopback_avg, loopback_std = latency_stats(loopback_signal, loopback_responses)
+print(f'Average latency : {loopback_avg:.2f} +/- {loopback_std:.2}')
 
 
-if __name__ == '__main__':
-
-  files = get_files()
-
-  s1 = AudioFile(files.signal)
-  s2 = AudioFile(files.response)
-
-  save_plot_buf(s1.buf, './s1.png')
-  save_plot_buf(s2.buf, './s2.png')
-
-  msr = LatencyMeasurement(s1.buf, s2.buf, s1.fs)
-  msr.get_latency()
 

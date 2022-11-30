@@ -10,7 +10,7 @@ class AudioFile:
     ''' read the file, print info and normalize to peak '''
     self.path = path
     self.read_wav()
-    self.print_info()
+    # self.print_info()
     self.normalize()
 
   def read_wav(self):
