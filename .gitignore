@@ -155,3 +155,4 @@ log*
 audiofiles/
 *.wav
 *.png
+.DS_Store
