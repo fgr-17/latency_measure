@@ -79,30 +79,18 @@ def latency_stats(signal_path, responses_path_list):
 
     return latency_avg, latency_std
 
-print('\nCalculating loopback latency')
-loopback_avg, loopback_std = latency_stats(loopback_signal, loopback_responses)
-print(f'Average latency : {loopback_avg:.2f} +/- {loopback_std:.2}')
 
-print('\nCalculating compensated loopback latency')
-loopback_c_avg, loopback_c_std = latency_stats(loopback_signal, loopback_compensated)
-print(f'Average latency [compensated] : {loopback_c_avg:.2f} +/- {loopback_c_std:.2}')
+def show_results(message, signal, responses, offset=0):
+    print(f'\nCalculating latency: {message}')
+    avg, std = latency_stats(signal, responses)
+    print(f'Average latency : {(avg - offset):.2f} +/- {(std):.2}')    
+    return avg
 
-print('\nCalculating LineIn to 4W latency[6 playback buffers]:')
-linein_lq_6b_avg, linein_lq_6b_c_std = latency_stats(loopback_signal, linein_lq_6b)
-print(f'LineIn - HS latency: {linein_lq_6b_avg:.2f} +/- {linein_lq_6b_c_std:.2}')
 
-print('\nCalculating LineIn to 4W latency[2 playback buffers]:')
-linein_lq_2b_avg, linein_lq_2b_c_std = latency_stats(loopback_signal, linein_lq_2b)
-print(f'LineIn - HS latency: {linein_lq_2b_avg:.2f} +/- {linein_lq_2b_c_std:.2}')
-
-print('\nCalculating Loopback latency[12.14.22 19:30 ARG]:')
-loopback_responses_141222_avg, loopback_responses_141222_std = latency_stats(loopback_signal, loopback_responses_141222)
-print(f'LineIn - HS latency: {loopback_responses_141222_avg:.2f} +/- {loopback_responses_141222_std:.2}')
-
-print('\nCalculating LineIn to 4W latency[2.13.27 Baseline]:')
-linein_lq_21327_avg, linein_lq_21327_std = latency_stats(loopback_signal, linein_lq_21327)
-print(f'LineIn - HS latency: {(linein_lq_21327_avg - loopback_responses_141222_avg):.2f} +/- {linein_lq_21327_std:.2}')
-
-print('\nCalculating LineIn to 4W latency[2.13.27 Jitter Buffer reduced]:')
-linein_lq_21327_jbuf_avg, llinein_lq_21327_jbuf_std = latency_stats(loopback_signal, linein_lq_21327_jbuf)
-print(f'LineIn - HS latency: {(linein_lq_21327_jbuf_avg - loopback_responses_141222_avg):.2f} +/- {llinein_lq_21327_jbuf_std:.2}')
+show_results('Initial loopback latency', loopback_signal, loopback_responses)
+show_results('Initial compensated loopback latency', loopback_signal, loopback_compensated)
+show_results('LineIn to 4W latency[6 playback buffers]', loopback_signal, linein_lq_6b)
+show_results('LineIn to 4W latency[2 playback buffers]', loopback_signal, linein_lq_2b)
+loopback_141222 = show_results('Loopback latency[12.14.22 19:30 ARG]', loopback_signal, loopback_responses_141222)
+show_results('LineIn to 4W latency[2.13.27 Baseline]', loopback_signal, linein_lq_21327, loopback_141222)
+show_results('LineIn to 4W latency[2.13.27 Jitter Buffer reduced]', loopback_signal, linein_lq_21327_jbuf, loopback_141222)
